@@ -123,6 +123,7 @@
         <button onclick="applyEncoding()">Apply Encoding</button>
         <button onclick="applyDecoding()">Apply Decoding</button><br>
         <textarea id="result" rows="5" readonly></textarea>
+        <button onclick="downloadResult()">Download Encoded Payload</button>
     </div>
 
     <script>
@@ -258,8 +259,19 @@
             }
             document.getElementById('result').value = result;
         }
+
+        function downloadResult() {
+            var result = document.getElementById('result').value;
+            var blob = new Blob([result], { type: 'text/plain' });
+            var url = window.URL.createObjectURL(blob);
+            var a = document.createElement('a');
+            a.href = url;
+            a.download = 'encoded_payload.txt';
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            window.URL.revokeObjectURL(url);
+        }
     </script>
 </body>
 </html>
-
-
