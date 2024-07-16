@@ -127,34 +127,30 @@
     </div>
 
     <script>
-        function doubleURLEncode() {
-            var payload = document.getElementById('payload').value;
-            var encodedURL = encodeURIComponent(payload);
+        function doubleURLEncode(word) {
+            var encodedURL = encodeURIComponent(word);
             var doubleEncodedURL = encodeURIComponent(encodedURL);
             return doubleEncodedURL;
         }
 
-        function urlEncode() {
-            var payload = document.getElementById('payload').value;
-            var encodedURL = encodeURIComponent(payload);
+        function urlEncode(word) {
+            var encodedURL = encodeURIComponent(word);
             return encodedURL;
         }
 
-        function htmlEncode() {
-            var payload = document.getElementById('payload').value;
+        function htmlEncode(word) {
             var encodedHTML = '';
-            for (var i = 0; i < payload.length; i++) {
-                encodedHTML += '&#' + payload.charCodeAt(i) + ';';
+            for (var i = 0; i < word.length; i++) {
+                encodedHTML += '&#' + word.charCodeAt(i) + ';';
             }
             return encodedHTML;
         }
 
-        function obfuscate() {
-            var payload = document.getElementById('payload').value;
+        function obfuscate(word) {
             var obfuscatedScript = '';
 
             // Inverte o payload
-            var reversedPayload = payload.split('').reverse().join('');
+            var reversedPayload = word.split('').reverse().join('');
 
             // Substitui caracteres específicos por códigos de escape
             var replacedPayload = reversedPayload.replace(/</g, '\\x3c')
@@ -172,91 +168,81 @@
             return obfuscatedScript;
         }
 
-        function base64Encode() {
-            var payload = document.getElementById('payload').value;
-            var encodedBase64 = btoa(payload);
+        function base64Encode(word) {
+            var encodedBase64 = btoa(word);
             return encodedBase64;
         }
 
-        function md5Encode() {
-            var payload = document.getElementById('payload').value;
-            var hash = CryptoJS.MD5(payload);
+        function md5Encode(word) {
+            var hash = CryptoJS.MD5(word);
             return hash.toString(CryptoJS.enc.Hex);
         }
 
         function applyEncoding() {
+            var payload = document.getElementById('payload').value;
+            var words = payload.split(/\s+/);
             var encodingType = document.getElementById('encodingType').value;
-            var result;
-            switch(encodingType) {
-                case 'doubleURLEncode':
-                    result = doubleURLEncode();
-                    break;
-                case 'urlEncode':
-                    result = urlEncode();
-                    break;
-                case 'htmlEncode':
-                    result = htmlEncode();
-                    break;
-                case 'obfuscate':
-                    result = obfuscate();
-                    break;
-                case 'base64Encode':
-                    result = base64Encode();
-                    break;
-                case 'md5Encode':
-                    result = md5Encode();
-                    break;
-                default:
-                    result = 'Invalid encoding type';
-            }
+            var result = words.map(word => {
+                switch(encodingType) {
+                    case 'doubleURLEncode':
+                        return doubleURLEncode(word);
+                    case 'urlEncode':
+                        return urlEncode(word);
+                    case 'htmlEncode':
+                        return htmlEncode(word);
+                    case 'obfuscate':
+                        return obfuscate(word);
+                    case 'base64Encode':
+                        return base64Encode(word);
+                    case 'md5Encode':
+                        return md5Encode(word);
+                    default:
+                        return 'Invalid encoding type';
+                }
+            }).join('\n');
             document.getElementById('result').value = result;
         }
 
-        function doubleURLDecode() {
-            var payload = document.getElementById('payload').value;
-            var decodedURL = decodeURIComponent(payload);
+        function doubleURLDecode(word) {
+            var decodedURL = decodeURIComponent(word);
             var doubleDecodedURL = decodeURIComponent(decodedURL);
             return doubleDecodedURL;
         }
 
-        function urlDecode() {
-            var payload = document.getElementById('payload').value;
-            var decodedURL = decodeURIComponent(payload);
+        function urlDecode(word) {
+            var decodedURL = decodeURIComponent(word);
             return decodedURL;
         }
 
-        function htmlDecode() {
-            var payload = document.getElementById('payload').value;
-            var doc = new DOMParser().parseFromString(payload, "text/html");
+        function htmlDecode(word) {
+            var doc = new DOMParser().parseFromString(word, "text/html");
             var decodedHTML = doc.documentElement.textContent;
             return decodedHTML;
         }
 
-        function base64Decode() {
-            var payload = document.getElementById('payload').value;
-            var decodedBase64 = atob(payload);
+        function base64Decode(word) {
+            var decodedBase64 = atob(word);
             return decodedBase64;
         }
 
         function applyDecoding() {
+            var payload = document.getElementById('payload').value;
+            var words = payload.split(/\s+/);
             var encodingType = document.getElementById('encodingType').value;
-            var result;
-            switch(encodingType) {
-                case 'doubleURLEncode':
-                    result = doubleURLDecode();
-                    break;
-                case 'urlEncode':
-                    result = urlDecode();
-                    break;
-                case 'htmlEncode':
-                    result = htmlDecode();
-                    break;
-                case 'base64Encode':
-                    result = base64Decode();
-                    break;
-                default:
-                    result = 'Decoding not supported for this type';
-            }
+            var result = words.map(word => {
+                switch(encodingType) {
+                    case 'doubleURLEncode':
+                        return doubleURLDecode(word);
+                    case 'urlEncode':
+                        return urlDecode(word);
+                    case 'htmlEncode':
+                        return htmlDecode(word);
+                    case 'base64Encode':
+                        return base64Decode(word);
+                    default:
+                        return 'Decoding not supported for this type';
+                }
+            }).join('\n');
             document.getElementById('result').value = result;
         }
 
